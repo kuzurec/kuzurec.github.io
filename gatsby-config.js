@@ -1,8 +1,8 @@
 module.exports = {
   // Customize your site metadata:
   siteMetadata: {
-    title: `Kuzure Blog`,
-    author: `kuzure`,
+    title: `Kuzure's blog`,
+    author: `kuzure-东山`,
     description: `Kuzure's blog`,
     social: [
       {

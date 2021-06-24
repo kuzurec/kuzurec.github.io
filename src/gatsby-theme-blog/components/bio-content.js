@@ -8,9 +8,9 @@ import { Themed } from "theme-ui"
 export default function Bio() {
   return (
     <>
-      kuzure
+      kuzure-东山
       <br />
-      东边有座山
+      <div style={{color: 'gray', fontSize: '13px', marginTop: '4px'}}>东边有座山</div>
     </>
   )
 }

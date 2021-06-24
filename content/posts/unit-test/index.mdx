@@ -1,0 +1,293 @@
+---
+title: jest单元测试、TDD、BDD
+date: 2021-06-24
+image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80"
+imageAlt: Laptop on a desk with VS Code open.
+---
+
+### TDD(测试驱动开发) 和 BDD(行为驱动开发)
+
+关于 TDD 和 BDD 网上有各种不同的说法，个人理解的 TDD，就是首先明确自己想要写什么代码，尽量从最简单的开始，写一个测试，再去具体地实现这小段代码，以达到这个测试通过的效果，之后再继续写测试、实现、测试通过，这样不停循环重构。
+
+例如写一个函数，我们可以首先写函数的调用的测试，然后实现代码并测试成功后，再测试函数的返回值，再继续实现函数...
+
+TDD 的好处就是会减少程序逻辑的错误，尽可能地减少 bug。而缺点就是如果更改了代码的实现逻辑，就需要修改测试，可能会使得测试代码难以维护。
+
+BDD 是 TDD 的一种补充，在 TDD 的基础上，采用了更详细的功能描述，通过考虑用户的行为、组件的功能，来编写测试。
+
+考虑到项目的复杂度和依赖性，TDD 需要简单和易于测试的代码，否则需要开发人员花较多的时间进行一些桥接的工作。因此个人比较推荐 BDD 的测试模式，通过功能和行为的描述，即行为/条件...结果...，进行测试。
+
+但是具体的模式可以根据实际开发工作进行选择。
+
+TDD 和 BDD 的比较可以参考: [关于 TDD 和 BDD](https://segmentfault.com/a/1190000018512127?utm_source=tag-newest)
+
+### 编写 react 组件的单元测试
+
+单元测试工具采用 `jest`, 官方介绍，jest 是一款开箱即用的测试框架，相比其它的测试工具，更简洁明快。
+
+组件测试的步骤大致如下：
+
+#### 1）测试组件的分支渲染
+
+```js
+describe("测试 CustomPicker组件", () => {
+  it("默认状态下只渲染样板不渲染取色板", () => {
+    const wrapper = mount(<CustomPicker color={"3b71fb"} />)
+
+    expect(wrapper.exists(".swatch-wrapper")).toBe(true)
+    expect(wrapper.exists("popover-wrapper")).toBe(false)
+  })
+  it("点击样板后取色板成功渲染", () => {
+    const wrapper = mount(<CustomPicker color={"3b71fb"} />)
+
+    wrapper.find(".swatch-wrapper").simulate("click")
+    expect(wrapper.exists("popover-wrapper")).toBe(true)
+  })
+})
+```
+
+describe 会形成一个作用域，对于其包含的测试需全部执行成功，才算测试成功。
+
+每一个 it 形成一个单独的测试作用域，第一个参数为这个测试的断言，第二个回调函数中编写具体的测试。
+
+测试 react 组件需要用到 enzyme 的 mount(全渲染)/shallow(浅渲染)/render(静态渲染)方法，来渲染组件，获取组件的 dom 结构。
+
+获取到组件的 dom 结构之后，就可以对组件的渲染进行测试。
+
+使用 simulate 可以模拟交互事件的触发。
+
+在交互事件或者组件生命周期调用之后，可以使用 expect 语句测试是否结果达到预期。
+
+expect 代表期望，用于描述测试的期望结果。比如一个简单的 1+1 等于 2 的测试，可以写为 expect(1+1).toBe(2)，这代表了一个成功的测试。
+
+对于上面图片中的测试，都是在测不同情况下，组件的渲染。
+
+对于组件的渲染，常用到的测试的方法有：
+
+.exists(selector)判断是否存在  
+.find(selector) 获取 dom 节点  
+.at(number) 获取指定索引的 dom 节点  
+.filter(selector) 根据选择器过滤 dom 节点  
+.filterWhere(fn) 根据函数返回值过滤 dom 节点  
+.text() 获取 dom 节点的文字内容  
+.props() 获取 dom 节点的属性。  
+.hasClass(className) 判断是否包含这个类，返回 true 或者 false  
+.contains(node) 确定是否包含该节点或者一些节点 ，返回 true 或者 false  
+常用的 jest 匹配器：
+
+.toBe() 浅比较是否相等  
+.toEqual() 可以对需要深比较的对象进行匹配  
+.not 测试相反的用例  
+.toBeGreaterThan() 大于  
+.toBeLessThan() 小于  
+.toMatch() 匹配正则表达式  
+.toHaveLength(number) 匹配数组、字符串长度
+
+打印节点的 dom 结构可以使用
+
+```js
+console.log(wrapper.find(selector).debug())
+```
+
+更多的 enzyme 的 api 可以参考https://enzymejs.github.io/enzyme/docs/api/
+
+#### 2）测试父组件传递的方法是否被正确调用
+
+```js
+it("当改变输入框输入时，父组件传递的changeName方法被正确的参数值调用", () => {
+  const changeName = jest.fn()
+  const wrapper = mount(<Search changeName={changeName} />)
+
+  wrapper.find("input.name").simulate("change", {
+    target: {
+      value: "kuzure",
+    },
+  })
+
+  expect(changeName).toHaveBeenCalledWith("kuzure")
+})
+```
+
+对于父组件传递的函数方法，需要测试是否被正确的参数调用。
+
+测试函数调用之前，需要将测试的函数进行 Mock，才可以被测试是否被调用。
+
+mock 函数可以捕捉函数的调用情况，设置函数的内部实现和返回值。
+
+Mock 函数的方法主要有
+
+jest.fn() 简单的返回一个 mock 函数，被调用后并不会执行
+jest.spyOn() 不仅可以捕获函数的调用情况，被调用后还会执行
+jest.mock() 可以 mock 整个模块
+测试函数调用的方法有
+
+toHaveBeenCalledWith(params) 被指定的参数调用
+toHaveBeenCalled() 被调用
+not.toHaveBeenCalled() 没有被调用
+toHaveBeenCalledTimes(number) 被调用的次数
+
+### 运行单元测试，查看覆盖率
+
+在终端输入 npm run jest --coverage，回车即可运行单元测试并查看覆盖率
+
+打开.tmp/coverage/lcov-report/index.html 可以查看具体的测试报告  
+Statements 代表声明覆盖率，Branches 代表分支覆盖率，Functions 代表函数覆盖率，Lines 代表代码行覆盖率。
+
+### 一些踩坑经验
+
+#### 当组件生命周期或交互事件触发了异步请求
+
+jest 不会真正执行异步请求，而是直接跳过异步语句。请将下面的代码粘贴到项目中
+
+```js title='act-wait-helper.js'
+import { act } from 'react-dom/test-utils';
+
+export function wait(amount = 0) {
+  return new Promise(resolve => setTimeout(resolve, amount));
+}
+
+export async function actWait(amount = 0) {
+  await act(async () => {
+    await wait(amount);
+  })
+}
+
+export async function updateWrapper(wrapper, amount = 0) {
+  await act(async () => {
+    await wait(amount);
+    wrapper.update();
+  })
+}
+```
+
+当测试过程触发了异步操作，则需要在触发之后加上
+
+```js
+await updateWrapper(wrapper);
+```
+
+如果出现 thrown: undefined 的报错，则可能是测试过程有触发了的异步请求没有mock，或者没有mock返回值。
+
+一个简单的异步请求的mock可以写作：
+```js
+api.getData = jest.fn().mockResolvedValue({ success: 1 });
+```
+
+#### 如何获取到组件的实例
+有时候，我们想测试组件中的方法的调用情况是否正确、mock其返回，这时我们就需要获取到组件的实例。
+
+需要注意的是，如果组件采用了hook的方式编写，那么是无法获取到组件的实例的，也就拿不到组件中的方法。
+
+所以，如果我们想要获取组件的实例，必须保证被测组件是class组件。
+
+普通的class组件，获取实例的方法为
+
+```js
+wrapper.instance();
+```
+
+连接了redux的组件实例获取
+
+redux官方建议，测试连接redux的组件时，单独将组件导出一次，从而避免测试被connect包裹的高阶组件。
+
+被antd的Form包裹的高阶组件
+
+```js
+let form;
+const wrapper = mountWithIntl(<Component wrappedComponentRef={node => (form= node)} />);
+```
+form就是组件的实例
+
+#### 当我们通过实例手动更新了组件的state
+
+如果通过setState()更新了state, 则需要在后面加上
+```js
+wrapper.update();
+```
+这样state才会更新到组件的dom结构中。
+
+#### 组件中使用了localstorage存储数据
+被测组件中如果使用了store.set、store.get方法，需要使用mock，否则jest会报错
+
+我们可以在beforeEach钩子函数中mock上述方法
+
+```js
+beforeEach(() => {
+  const storage = { username: 'kuzure' };
+
+  store.get = jest.fn().mockImplementation(key => {
+    return storage[key];
+  });
+  store.set = jest.fn().mockImplementation((key, value) => {
+    return (Storage[key] = `${value}`);
+  });
+})
+```
+
+beforeEach会在每一条测试执行之前执行，当beforeEach写在describe内时，只适用于describe块内的测试。
+
+通过mockImplementation()来mock store的具体实现
+
+#### 子组件连接了redux
+如果子组件连接了redux，则在渲染组件时jest会报错，这时我们需要将子组件整个mock掉
+
+在测试文件上方这么写（必须在describe之外)：
+
+```js
+jest.mock('../../ChildComponent'); // 引号中为子组件的相对路径
+```
+
+#### 测试saga
+
+对于saga函数，我们主要测试是否调用了正确的api、是否发送了正确的action。
+
+使用redux-saga-test-plan第三方插件，我们可以在测试文件中这么写:
+
+```js
+import { testSaga } from 'redux-saga-test-plan';
+import { fetchData } from '../entity';
+
+it('当接口正常返回数据，发送正确的action', () => {
+  api.get = jest.fn().mockResolvedValue({ data: 1 });
+
+  testSaga(fetchData)
+    .next()
+    .call(api.get, 'api/v1/data')
+
+    .next({ data: 1 })
+    .put({
+      type: FETCH_DATA,
+      value: 1
+    })
+    .next()
+    .isDone();
+})
+```
+
+.next(params)表示执行到下一步的yield语句，参数表示上一步yield语句的返回值
+
+.call(fn)表示断言函数被调用
+
+.put(action)表示断言发送了指定的action
+
+.isDone() 表示断言saga函数已经结束
+
+更多参考：https://github.com/jfairbank/redux-saga-test-plan#unit-testing
+
+#### 测试reducer
+这个部分主要测试是否正确完成计算，输入输出十分明确，非常适合做单元测试
+```js
+it ('panel is pushed to panels state', () => {
+  const state = fromJS({
+    panels: ['jest']
+  });
+
+  const expected = {
+    panels: ['jest', 'enzyme']
+  };
+
+  const result = dashboard(state, addPanel('enzyme'));
+
+  expect(result.toJS()).toEqual(expected);
+})
+```
