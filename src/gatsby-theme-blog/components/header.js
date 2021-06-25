@@ -88,7 +88,7 @@ const Header = props => (
         >
           <Title {...props}>Kuzure's blog</Title>
         </div>
-        {props.location.pathname === rootPath && <Bio />}
+        {props.location.pathname === rootPath && <Bio {...props}/>}
       </div>
     </header>
   </div>

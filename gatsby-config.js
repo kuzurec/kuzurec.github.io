@@ -15,6 +15,7 @@ module.exports = {
       },
     ],
   },
+  pathPrefix: '/page',
   plugins: [
     {
       resolve: `gatsby-theme-blog`,
@@ -38,5 +39,17 @@ module.exports = {
         src: 'https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js'
       },
     },
+    {
+      resolve: 'gatsby-plugin-load-script',
+      options: {
+        src: 'https://blog-static.cnblogs.com/files/melodyjerry/cursor-effects.js'
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-load-script',
+      options: {
+        src: 'http://static.kuzure.club/iconfont.js'
+      },
+    }
   ],
 }
