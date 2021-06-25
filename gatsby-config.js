@@ -18,7 +18,25 @@ module.exports = {
   plugins: [
     {
       resolve: `gatsby-theme-blog`,
-      options: {},
+      options: {
+        basePath: `/`
+      },
+    },
+    `gatsby-plugin-offline`,
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: 'kuzure',
+        short_name: 'kuzure',
+        start_url: `/`,
+        icon: require.resolve('./images/favicon.png')
+      }
+    },
+    {
+      resolve: 'gatsby-plugin-load-script',
+      options: {
+        src: 'https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js'
+      },
     },
   ],
 }

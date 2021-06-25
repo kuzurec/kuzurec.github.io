@@ -1,5 +1,5 @@
 import React from "react"
-import { Themed } from "theme-ui"
+import { css } from "theme-ui"
 
 /**
  * Change the content to add your own bio
@@ -7,10 +7,11 @@ import { Themed } from "theme-ui"
 
 export default function Bio() {
   return (
-    <>
-      kuzure-东山
-      <br />
-      <div style={{color: 'gray', fontSize: '13px', marginTop: '4px'}}>东边有座山</div>
-    </>
+    <div>
+      <div>kuzure-东山</div>
+      <div style={{ color: "gray", fontSize: "13px", marginTop: "4px" }}>
+        东边有座山
+      </div>
+    </div>
   )
 }
