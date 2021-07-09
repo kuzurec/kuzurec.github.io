@@ -1,0 +1,175 @@
+---
+title: 开发一个cli工具一键给你的css样式名添加前缀
+date: 2021-07-09
+image: "./image.jpg"
+imageAlt: Laptop on a desk with VS Code open.
+---
+
+最近做 qiankun 框架微前端集成的时候，遇到了主应用和子应用样式名冲突导致样式异常的问题。
+对此，qiankun 虽然给出了沙箱隔离的方案，但是这个方案对于 react 框架似乎并不怎么友好，
+而一个一个地给子应用的样式添加前缀又太繁琐，
+所以就想是否可以开发一个 cli 工具，一键给项目中的 className 添加前缀。
+
+有了想法，这就上车。
+
+### 开发 cli 工具
+
+首先创建一个文件夹，并进入文件夹执行 npm init ，一路回车。
+在生成的 package.json 中，添加执行脚本的路径配置：
+
+```json
+"bin": {
+  "ccpc": "./bin/ccpc/index.js"
+},
+```
+
+添加以下依赖:
+
+```json
+"commander": "^8.0.0",
+"chalk": "^4.1.1",
+"ora": "^5.4.1"
+```
+
+`commander` 用于实现 node 命令行界面的交互。  
+`chalk` 可以给你的终端输出添加颜色。  
+`ora` 添加优雅的终端转轮
+
+在 bin/ccpc/index.js 中添加以下代码
+
+```js
+const program = require('commander')
+const chalk = require('chalk')
+const ora = require('ora')
+const spinner = ora('Loading undead unicorns')
+
+program
+  .command("add <prefix_name>")
+  .option("-d, --dir <dir>", "Which dir to use", "./build")
+  .action((prefix_name, options) => {
+    spinner.start(`开始添加前缀 ${prefix_name}`)
+
+    setTimeout(() => {
+      spinner.succeed(chalk.green(`添加前缀 ${prefix_name} 成功`))
+    }, 1000)
+  }
+
+program.parse(process.argv)
+```
+
+具体的用法可参考其官方文档，这里就不赘述了。我们只需要了解 command 是用于描述命令，option 用于添加可选参数，
+action 定义命令的回调函数，用于执行命令的相关操作。
+
+### 调试
+
+直接执行 node [path]/bin/ccpc/index.js
+
+或者执行 npm link 添加软链接
+
+也可发布 npm 包后执行
+
+npm install -g [包名]
+
+然后就可以使用 ccpc 命令了，此时执行
+
+```cmd
+ccpc add myprefix
+```
+
+可以看到命令行输出:
+
+!['img-snap.png'](./img-snap.png)
+
+这样一个简单的 cli 就开发完成了。
+
+### 匹配样式名以及添加前缀
+
+这里选用`jscodeshift`和`css-tree`来分别替换 js 和 css 文件。
+
+Jscodeshift 能够解析 js ，将 js 内容解析成 AST(Abstract Syntax Tree) 语法树，然后提供一些便利的操作接口，方便我们对各个节点进行更改。  
+css-tree 则同理，用于解析 css.
+
+添加以下代码, 读取文件转换成 string 格式， 由于是直接替换打包之后的文件，因此只需转换 js 和 css 格式的文件
+
+```js
+const addPrefix = (prefixName, filePath, extname) => {
+  const originData = fs.readFileSync(filePath, "utf8")
+  const newData =
+    extname === ".js"
+      ? modifyJsFile(prefixName, originData)
+      : modifyCssFile(prefixName, originData)
+
+  fs.writeFileSync(filePath, newData)
+}
+```
+
+添加前缀函数：
+
+```js
+const addClassNamePrefixHelper = (name, prefixName) => {
+  const classList = name.split(" ")
+  const newClassName = classList
+    .map(i => {
+      if (!/^(\w|-)+$/.test(i)) {
+        return i
+      }
+
+      return `${prefixName}_${i}`
+    })
+    .join(" ")
+
+  return newClassName
+}
+```
+
+具体的修改 js 文件方法核心代码：
+
+```js
+const ast = j(source) // source为string格式的源代码，通过fs.redadFileSync进行转换
+
+/**
+ * 匹配 className: "xxx xxx"
+ */
+ast
+  .find(j.Property, {
+    key: {
+      name: "className",
+    },
+  })
+  .find(j.Literal)
+  .forEach(item => {
+    if (item?.value?.value && typeof item?.value?.value === "string") {
+      const newClassName = addClassNamePrefixHelper(
+        item.value.value,
+        prefixName
+      )
+
+      j(item).replaceWith(j.literal(newClassName))
+    }
+  })
+```
+
+css 文件：
+
+```js
+const modifyCssFile = (prefixName, source) => {
+  const ast = csstree.parse(source)
+
+  csstree.walk(ast, node => {
+    if (node.type === "ClassSelector") {
+      node.name = `${prefixName}_${node.name}`
+    }
+  })
+
+  return csstree.generate(ast)
+}
+```
+
+主要步骤为：查找 ast 语法树，然后找到文件指定的代码片段进行修改。我们到https://astexplorer.net/ 网站中，
+将要添加前缀的代码粘贴进去，就能看到转换后的 ast 语法树。
+
+不同的项目匹配规则可能会有差异，因此这里只给出一个思路。具体可到 [git代码仓库](https://github.com/kuzurec/css-classname-prefix-cli) 中查看。
+我已经将其发布到了 npm 中，可通过npm安装使用：
+```cmd
+npm install -g css-classname-prefix-cli
+```

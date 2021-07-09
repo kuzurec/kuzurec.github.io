@@ -4,7 +4,7 @@
  * to go from default purple to a blue theme
  */
 
-const darkRed = `#B85883`
+const darkRed = `#282c35`
 // const lightBlue = `#66E0FF`
 const blueGray = `#282c35`
 

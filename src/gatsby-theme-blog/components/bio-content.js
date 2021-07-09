@@ -10,7 +10,7 @@ export default function Bio(props) {
   return (
     <div>
       <div>
-        <span>kuzure-东山</span>
+        <span>kuzure-耳东山亘</span>
         <Themed.a as={Link} to="https://github.com/kuzurec">
           <svg className="icon github-icon" aria-hidden="true">
             <use xlinkHref="#icon-github"></use>
