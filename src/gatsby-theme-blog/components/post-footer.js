@@ -11,7 +11,7 @@ const PostFooter = ({ previous, next }) => (
     })}
   >
     <Themed.hr />
-    <Bio />
+    <Bio isFooter/>
     {(previous || next) && (
       <Flex
         as="ul"

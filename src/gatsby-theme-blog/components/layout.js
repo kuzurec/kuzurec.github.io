@@ -18,7 +18,10 @@ const Layout = ({ children, ...props }) => {
       </Helmet>
       <Header {...props} />
       <SkipNavContent />
-      <div>
+      <div css={css({
+        width: `100%`,
+        background: `white`
+      })}>
         <div
           css={css({
             maxWidth: `container`,

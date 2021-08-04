@@ -36,18 +36,6 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-load-script',
       options: {
-        src: 'https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js'
-      },
-    },
-    {
-      resolve: 'gatsby-plugin-load-script',
-      options: {
-        src: 'https://blog-static.cnblogs.com/files/melodyjerry/cursor-effects.js'
-      },
-    },
-    {
-      resolve: 'gatsby-plugin-load-script',
-      options: {
         src: 'https://at.alicdn.com/t/font_2633402_q06j6vu6n4.js'
       },
     }
