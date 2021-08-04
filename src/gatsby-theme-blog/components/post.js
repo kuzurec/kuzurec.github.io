@@ -31,7 +31,11 @@ const Post = ({
     />
     <main>
       <article>
-        <header>
+        <header css={css({
+          '@media (max-width: 1366px)': {
+            mt: 4
+          }
+        })}>
           <PostHero post={post} />
           <PostTitle>{post.title}</PostTitle>
           <PostDate>{post.date}</PostDate>

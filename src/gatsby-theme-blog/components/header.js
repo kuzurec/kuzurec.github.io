@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { Link } from "gatsby"
 import { jsx, css, Themed } from "theme-ui"
+import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import Bio from "./bio"
 
 const Title = ({ children }) => {
@@ -34,7 +35,7 @@ const Header = props => (
   <div>
     <header
       css={css({
-        backgroundImage: `url("index-bg.png")`,
+        backgroundImage: `url('index-bg.png')`,
         pb: 80,
       })}
     >
