@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { Link } from "gatsby"
 import { jsx, css, Themed } from "theme-ui"
-import { StaticImage } from 'gatsby-plugin-image'
+import { MainImage } from 'gatsby-plugin-image'
 import Bio from "./bio"
 
 const Title = ({ children }) => {
@@ -33,8 +33,8 @@ const Title = ({ children }) => {
 
 const Header = props => (
   <div>
-    <StaticImage 
-      src="../../../images/index-bg.png"
+    <MainImage 
+      src={`${__PATH_PREFIX__}/index-bg.jpg`}
       alt="background"
       css={css({
         position: `fixed !important`,
