@@ -3,6 +3,7 @@ title: 开发一个cli工具一键给你的css样式名添加前缀
 date: 2021-07-09
 image: "./image.jpg"
 imageAlt: Laptop on a desk with VS Code open.
+tags: [前端, AST]
 ---
 
 最近做 qiankun 框架微前端集成的时候，遇到了主应用和子应用样式名冲突导致样式异常的问题。
@@ -31,8 +32,8 @@ imageAlt: Laptop on a desk with VS Code open.
 "ora": "^5.4.1"
 ```
 
-`commander` 用于实现 node 命令行界面的交互。  
-`chalk` 可以给你的终端输出添加颜色。  
+`commander` 用于实现 node 命令行界面的交互。
+`chalk` 可以给你的终端输出添加颜色。
 `ora` 添加优雅的终端转轮
 
 在 bin/ccpc/index.js 中添加以下代码
@@ -86,7 +87,7 @@ ccpc add myprefix
 
 这里选用`jscodeshift`和`css-tree`来分别替换 js 和 css 文件。
 
-Jscodeshift 能够解析 js ，将 js 内容解析成 AST(Abstract Syntax Tree) 语法树，然后提供一些便利的操作接口，方便我们对各个节点进行更改。  
+Jscodeshift 能够解析 js ，将 js 内容解析成 AST(Abstract Syntax Tree) 语法树，然后提供一些便利的操作接口，方便我们对各个节点进行更改。
 css-tree 则同理，用于解析 css.
 
 添加以下代码, 读取文件转换成 string 格式， 由于是直接替换打包之后的文件，因此只需转换 js 和 css 格式的文件

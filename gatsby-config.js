@@ -48,7 +48,7 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-load-script',
       options: {
-        src: 'http://static.kuzure.club/iconfont.js'
+        src: 'https://at.alicdn.com/t/font_2633402_q06j6vu6n4.js'
       },
     }
   ],

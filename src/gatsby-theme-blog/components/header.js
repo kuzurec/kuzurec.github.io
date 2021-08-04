@@ -3,9 +3,7 @@ import { Link } from "gatsby"
 import { jsx, css, Themed } from "theme-ui"
 import Bio from "./bio"
 
-const rootPath = `${__PATH_PREFIX__}/`
-
-const Title = ({ children, location }) => {
+const Title = ({ children }) => {
   return (
     <Themed.h1
       css={css({
@@ -19,7 +17,7 @@ const Title = ({ children, location }) => {
         css={css({
           color: `white`,
           boxShadow: `none`,
-          textDecoration: location.pathname === rootPath ? `none` : `underline`,
+          textDecoration: `underline`,
           ":hover": {
             color: `gray`,
           },
@@ -36,7 +34,7 @@ const Header = props => (
   <div>
     <header
       css={css({
-        backgroundImage: `url("./index-bg.png")`,
+        backgroundImage: `url("index-bg.png")`,
         pb: 80,
       })}
     >
@@ -58,7 +56,7 @@ const Header = props => (
         >
           <Title {...props}>Kuzure's blog</Title>
         </div>
-        {props.location.pathname === rootPath && <Bio {...props} />}
+        {<Bio {...props} />}
       </div>
     </header>
   </div>

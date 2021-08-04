@@ -3,6 +3,7 @@ title: jest单元测试、TDD、BDD
 date: 2021-06-24
 image: "./image.jpg"
 imageAlt: Laptop on a desk with VS Code open.
+tags: [前端, 单元测试]
 ---
 
 ### TDD(测试驱动开发) 和 BDD(行为驱动开发)
@@ -64,23 +65,23 @@ expect 代表期望，用于描述测试的期望结果。比如一个简单的 
 
 对于组件的渲染，常用到的测试的方法有：
 
-.exists(selector)判断是否存在  
-.find(selector) 获取 dom 节点  
-.at(number) 获取指定索引的 dom 节点  
-.filter(selector) 根据选择器过滤 dom 节点  
-.filterWhere(fn) 根据函数返回值过滤 dom 节点  
-.text() 获取 dom 节点的文字内容  
-.props() 获取 dom 节点的属性。  
-.hasClass(className) 判断是否包含这个类，返回 true 或者 false  
-.contains(node) 确定是否包含该节点或者一些节点 ，返回 true 或者 false  
+.exists(selector)判断是否存在
+.find(selector) 获取 dom 节点
+.at(number) 获取指定索引的 dom 节点
+.filter(selector) 根据选择器过滤 dom 节点
+.filterWhere(fn) 根据函数返回值过滤 dom 节点
+.text() 获取 dom 节点的文字内容
+.props() 获取 dom 节点的属性。
+.hasClass(className) 判断是否包含这个类，返回 true 或者 false
+.contains(node) 确定是否包含该节点或者一些节点 ，返回 true 或者 false
 常用的 jest 匹配器：
 
-.toBe() 浅比较是否相等  
-.toEqual() 可以对需要深比较的对象进行匹配  
-.not 测试相反的用例  
-.toBeGreaterThan() 大于  
-.toBeLessThan() 小于  
-.toMatch() 匹配正则表达式  
+.toBe() 浅比较是否相等
+.toEqual() 可以对需要深比较的对象进行匹配
+.not 测试相反的用例
+.toBeGreaterThan() 大于
+.toBeLessThan() 小于
+.toMatch() 匹配正则表达式
 .toHaveLength(number) 匹配数组、字符串长度
 
 打印节点的 dom 结构可以使用
@@ -130,7 +131,7 @@ toHaveBeenCalledTimes(number) 被调用的次数
 
 在终端输入 npm run jest --coverage，回车即可运行单元测试并查看覆盖率
 
-打开.tmp/coverage/lcov-report/index.html 可以查看具体的测试报告  
+打开.tmp/coverage/lcov-report/index.html 可以查看具体的测试报告
 Statements 代表声明覆盖率，Branches 代表分支覆盖率，Functions 代表函数覆盖率，Lines 代表代码行覆盖率。
 
 ### 一些踩坑经验
