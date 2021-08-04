@@ -35,7 +35,7 @@ const Header = props => (
   <div>
     <header
       css={css({
-        backgroundImage: `url('index-bg.png')`,
+        backgroundImage: `url('${__PATH_PREFIX__}/index-bg.png')`,
         pb: 80,
       })}
     >
