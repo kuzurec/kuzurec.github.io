@@ -6,7 +6,6 @@
  */
 
 import * as React from "react"
-import { Link } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image"
 import { Themed, css, Flex } from "theme-ui"
 import BioContent from "./bio-content"
@@ -23,20 +22,18 @@ const Bio = props => {
           flexDirection: `column`,
         })}
       >
-        <Link to="/intro">
-          <StaticImage
-            src="../../../images/avatar.jpg"
-            alt="kuzure"
-            css={css({
-              mr: 2,
-              mb: 0,
-              width: 48,
-              minWidth: 48,
-              borderRadius: 99999,
-              marginBottom: 16,
-            })}
-          />
-        </Link>
+        <StaticImage
+          src="../../../images/avatar.jpg"
+          alt="kuzure"
+          css={css({
+            mr: 2,
+            mb: 0,
+            width: 80,
+            minWidth: 48,
+            borderRadius: 99999,
+            marginBottom: 16,
+          })}
+        />
         <Themed.div>
           <BioContent {...props} />
         </Themed.div>
