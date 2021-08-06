@@ -12,7 +12,7 @@ import PostFooter from './post-footer'
 import PostHero from './post-hero'
 import Tags from './tags'
 import PostTag from './post-tag'
-
+import "@reach/skip-nav/styles.css";
 
 const Post = ({
   data: {
@@ -47,7 +47,13 @@ const Post = ({
             <PostDate>{post.date}</PostDate>
             <PostTag tags={post.tags} />
           </header>
-          <section>
+          <section
+            css={css({
+              '@media (max-width: 1366px)': {
+                overflowX: `scroll`,
+              },
+            })}
+          >
             <MDXRenderer>{post.body}</MDXRenderer>
           </section>
         </article>

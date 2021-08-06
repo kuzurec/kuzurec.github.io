@@ -58,7 +58,7 @@ const Tags = ({ posts }) => {
           width: `100%`,
           flexWrap: `wrap`,
           height: 40,
-          justifyContent: `center`
+          justifyContent: `center`,
         },
       })}
     >
@@ -70,7 +70,7 @@ const Tags = ({ posts }) => {
             mr: 2,
             lineHeight: `16px`,
             display: 'inline-block',
-            height: 16
+            height: 16,
           },
         })}
       >
@@ -79,21 +79,6 @@ const Tags = ({ posts }) => {
         </svg>
         标签
       </div>
-      <Themed.a
-        as={Link}
-        to={rootPath}
-        css={css({
-          lineHeight: `24px`,
-          '@media (max-width: 1366px)': {
-            mr: 2,
-            lineHeight: `16px`,
-            display: 'inline-block',
-            height: 16,
-          },
-        })}
-      >
-        全部({allNum})
-      </Themed.a>
       {Object.keys(tags).map(item => (
         <div
           css={css({
@@ -106,7 +91,15 @@ const Tags = ({ posts }) => {
             },
           })}
         >
-          <Themed.a as={Link} to={`${rootPath}#${item}`}>
+          <Themed.a
+            as={Link}
+            to={`${rootPath}#${item}`}
+            css={css({
+              ':hover': {
+                color: `#66E0FF`,
+              },
+            })}
+          >
             {item}({tags[item]})
           </Themed.a>
         </div>

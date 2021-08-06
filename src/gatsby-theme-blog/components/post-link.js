@@ -15,6 +15,9 @@ const PostLink = ({ title, slug, date, excerpt, tags }) => (
           as={Link}
           sx={{
             textDecoration: `none`,
+            ':hover': {
+              color: `#2ac3ff`
+            }
           }}
           to={slug}
         >

@@ -13,18 +13,30 @@ const PostList = ({ posts, location }) => {
         <div
           css={css({
             color: `gray`,
-            "@media (max-width: 1366px)": {
-              mt: 4
-            }
+            '@media (max-width: 1366px)': {
+              mt: 4,
+            },
           })}
         >
-          <small onClick={() => {window.history.back(-1)}} css={css({
-            cursor: `pointer`,
-            mr: 1
-          })}>
-            <svg className="icon" aria-hidden="true" css={(css({
-              color: `gray !important`
-            }))}>
+          <small
+            onClick={() => {
+              window.history.back(-1)
+            }}
+            css={css({
+              cursor: `pointer`,
+              mr: 1,
+            })}
+          >
+            <svg
+              className="icon"
+              aria-hidden="true"
+              css={css({
+                color: `gray !important`,
+                ':hover': {
+                  color: `#66E0FF !important`,
+                },
+              })}
+            >
               <use xlinkHref="#icon-fanhui"></use>
             </svg>
           </small>

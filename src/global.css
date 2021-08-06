@@ -11,3 +11,9 @@
 .github-icon {
   margin-left: 4px;
 }
+
+.header-nav-hover {
+  background-color: hsla(0,100%,99%,.8);
+  box-shadow: 0 0 4px rgba(0,0,0,.27);
+  top: -52px !important;
+}
