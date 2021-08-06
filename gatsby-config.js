@@ -39,6 +39,12 @@ module.exports = {
         src: 'https://at.alicdn.com/t/font_2633402_q06j6vu6n4.js',
       },
     },
+    {
+      resolve: 'gatsby-plugin-load-script',
+      options: {
+        src: 'https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6',
+      },
+    },
     `gatsby-plugin-gitalk`,
   ],
 }

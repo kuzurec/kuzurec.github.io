@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet'
 import { css, Themed } from 'theme-ui'
 import { SkipNavContent } from '@reach/skip-nav'
 import Header from './header'
-import "@reach/skip-nav/styles.css";
 import useBlogThemeConfig from '../hooks/configOptions'
 
 const Layout = ({ children, ...props }) => {
@@ -35,6 +34,7 @@ const Layout = ({ children, ...props }) => {
           {children}
         </div>
       </div>
+      <i id="go-up" aria-hidden="true" className="fa fa-arrow-up"></i>
     </Themed.root>
   )
 }
