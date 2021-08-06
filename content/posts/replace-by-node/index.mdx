@@ -1,0 +1,192 @@
+---
+title: 偷懒升级--对照文档替换工作太麻烦？用node爬虫和jscodeshift实现一键搞定
+date: 2021-08-06
+image: "./image.jpg"
+imageAlt: Laptop on a desk with VS Code open.
+tags: [前端, 爬虫]
+---
+
+背景是这样的，我们部门的错误码规范要改成公司的规范，之前的错误码是这样的一串数字: 3647372828，现在要改成："XXXXX.XXXXX.XXXXX" 这种格式的字符串。
+而且有的改，有的不改，有些错误码在前端还没有用到。
+后端给出的文档格式如下：
+
+<table style="border-collapse: collapse;width: 100%;border: 1px solid #ddd;text-align: left;">
+  <thead>
+    <tr>
+      <th style="padding: 15px; border: 1px solid #ddd;">错误码标识1</th>
+      <th style="padding: 15px; border: 1px solid #ddd;">错误码标识2</th>
+      <th style="padding: 15px; border: 1px solid #ddd;">错误码标识3</th>
+      <th style="padding: 15px; border: 1px solid #ddd;">错误信息</th>
+      <th style="padding: 15px; border: 1px solid #ddd;">原错误码</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="3" style="padding: 15px; border: 1px solid #ddd;vertical-align: text-bottom;">
+        XXX
+      </td>
+      <td rowspan="3" style="padding: 15px; border: 1px solid #ddd;vertical-align: text-bottom;">
+        XXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        XXXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        XXXXXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        344456789
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        XXXXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        XXXXXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        344323223
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        XXXXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        XXXXXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        392023223
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="10" style="padding: 15px; border: 1px solid #ddd;vertical-align: text-bottom;">
+        XXX
+      </td>
+      <td rowspan="10" style="padding: 15px; border: 1px solid #ddd;vertical-align: text-bottom;">
+        XXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        XXXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        XXXXXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        344456733
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        XXXXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        XXXXXX
+      </td>
+      <td colspan="1" style="padding: 15px; border: 1px solid #ddd;">
+        344323222
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+前端需要把原错误码，改为错误码标识 1、2、3 用 . 拼接的字符串
+
+而我们前端有多个错误码对应的国际化文件，要一个一个找确实很麻烦，根据之前的经验，我们已经知道可以
+使用 jscodeshift 更改源代码，这次也同理，只是多了一个将网页中的表格的信息提取出来生成一个原错误码和新错误码的映射对象的过程。
+
+我们可以使用 node 爬虫完成这一功能。
+
+cli 工具的基本生成步骤可以参加我的上一篇博客，这里就不赘述了，直接进入正题。
+
+添加以下依赖：
+
+```json
+"superagent": "^6.1.0",
+"cheerio": "^1.0.0-rc.10",
+"jscodeshift": "^0.13.0"
+```
+
+superagent 用于获取网页内容，cheerio 可以让你像用 jquery 一样操作 dom 元素。
+
+首先获取网页内容：
+
+```js
+superagent.get("http://xxx.com/xxx").end((err, res) => {
+  if (err) {
+    console.log(`抓取失败 - ${err}`)
+  } else {
+    getCodeMap(res.text) // res.text就是我们需要的网页html文本了
+  }
+})
+```
+
+遍历表格行元素，得到映射对象：
+
+```js
+const getCodeMap = source => {
+  let codeMap = {}
+  let $ = cheerio.load(source)
+  let strPrefix = ""
+
+  $("tr").each((i, tr) => {
+    let strText = ""
+    $(tr)
+      .find("td")
+      .each((i, td) => {
+        let text = $(td).text()
+        // 有rowspan属性的td文本先保留在单独的变量中
+        if ($(td).attr("rowspan")) {
+          if (strPrefix.length === 0 || strPrefix.split(".").length === 2) {
+            strPrefix = text
+          } else {
+            strPrefix = strPrefix.concat(`.${text}`)
+          }
+        } else if (/^[a-zA-Z]+$/.test(text)) {
+          strText = strPrefix.concat(`.${text}`)
+        } else if (/^[0-9]{10}$/.test(text)) {
+          codeMap[text] = strText
+        }
+      })
+  })
+
+  spinner.succeed(chalk.green(JSON.stringify(codeMap)))
+
+  return codeMap
+}
+```
+
+最后根据映射对象，用 jscodeshift 替换对应元素就好啦
+
+```js
+const j = require("jscodeshift")
+const fs = require("fs")
+
+const modifyFile = (source, codeMap) => {
+  const ast = j(source)
+
+  ast
+    .find(j.Literal)
+    .filter(item => item.name === "key")
+    .forEach(item => {
+      // 如果codeMap中有对应的映射，且不为空字符串，就将其替换成映射的value
+      if (codeMap[item.value.value]?.length) {
+        j(item).replaceWith(j.literal(codeMap[item.value.value]))
+      }
+    })
+
+  return ast.toSource()
+}
+
+const replace = (filePath, codeMap) => {
+  const originData = fs.readFileSync(filePath, "utf8")
+  const newData = modifyFile(originData, codeMap)
+
+  fs.writeFileSync(filePath, newData)
+}
+
+module.exports = replace
+```
+
+好了，node命令执行一下就准备下班吧🤣。
