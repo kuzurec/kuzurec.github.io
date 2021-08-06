@@ -17,7 +17,6 @@ const Layout = ({ children, ...props }) => {
         <link rel="stylesheet" href={webfontURL} />
       </Helmet>
       <Header {...props} />
-      <SkipNavContent />
       <div css={css({
         width: `100%`,
         background: `white`
@@ -34,6 +33,7 @@ const Layout = ({ children, ...props }) => {
           {children}
         </div>
       </div>
+      <SkipNavContent />
     </Themed.root>
   )
 }

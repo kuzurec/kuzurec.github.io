@@ -20,7 +20,7 @@ module.exports = {
     {
       resolve: `gatsby-theme-blog`,
       options: {
-        basePath: `/`
+        basePath: `/`,
       },
     },
     `gatsby-plugin-offline`,
@@ -30,14 +30,15 @@ module.exports = {
         name: 'kuzure',
         short_name: 'kuzure',
         start_url: `/`,
-        icon: require.resolve('./images/favicon.png')
-      }
+        icon: require.resolve('./images/favicon.png'),
+      },
     },
     {
       resolve: 'gatsby-plugin-load-script',
       options: {
-        src: 'https://at.alicdn.com/t/font_2633402_q06j6vu6n4.js'
+        src: 'https://at.alicdn.com/t/font_2633402_q06j6vu6n4.js',
       },
-    }
+    },
+    `gatsby-plugin-gitalk`,
   ],
 }

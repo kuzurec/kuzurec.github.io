@@ -34,11 +34,13 @@ const Bio = props => {
             cursor: `pointer`,
             marginBottom: 16,
             ':hover': {
-              animation: `5s linear 0s normal none infinite rotate`,
-            },
-            '@keyframes rotate': {
-              from: { transform: `rotate(0deg)` },
-              to: { transform: `rotate(360deg)` },
+              transform: `rotate(
+                666turn
+                )`,
+              transitionDelay: `0`,
+              transitionProperty: `all`,
+              transitionDuration: `59s`,
+              transitionTimingFunction: `cubic-bezier(.34,0,.84,1)`,
             },
           })}
         />

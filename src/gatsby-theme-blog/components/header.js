@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import { Link } from "gatsby"
-import { jsx, css, Themed } from "theme-ui"
+import { Link } from 'gatsby'
+import { jsx, css, Themed } from 'theme-ui'
 import { MainImage } from 'gatsby-plugin-image'
-import Bio from "./bio"
+import Bio from './bio'
 
 const Title = ({ children }) => {
   return (
@@ -19,7 +19,7 @@ const Title = ({ children }) => {
           color: `white`,
           boxShadow: `none`,
           textDecoration: `underline`,
-          ":hover": {
+          ':hover': {
             color: `gray`,
           },
         })}
@@ -33,17 +33,20 @@ const Title = ({ children }) => {
 
 const Header = props => (
   <div>
-    <MainImage 
-      src={`${__PATH_PREFIX__}/index-bg.jpg`}
-      alt="background"
+    <div
       css={css({
+        height: 402,
+        overflow: `hidden`,
         position: `fixed !important`,
         top: 0,
-        width: `100%`,
-        height: 400,
-        zIndex:  -1
+        zIndex: -1,
       })}
-    />
+    >
+      <MainImage
+        src={`${__PATH_PREFIX__}/index-bg.png`}
+        alt="background"
+      />
+    </div>
     <header
       css={css({
         pb: 80,
