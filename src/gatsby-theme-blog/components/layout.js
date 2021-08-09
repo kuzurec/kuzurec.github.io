@@ -9,6 +9,11 @@ const Layout = ({ children, ...props }) => {
   const blogThemeConfig = useBlogThemeConfig()
   const { webfontURL } = blogThemeConfig
 
+  const handleClick = () => {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
+  }
+
   return (
     <Themed.root>
       <Helmet>
@@ -34,7 +39,11 @@ const Layout = ({ children, ...props }) => {
           {children}
         </div>
       </div>
-      <i id="go-up" aria-hidden="true" className="fa fa-arrow-up"></i>
+      <div id="go-up" onClick={handleClick}>
+        <svg className="icon" aria-hidden="true">
+          <use xlinkHref="#icon-ai-top"></use>
+        </svg>
+      </div>
     </Themed.root>
   )
 }
