@@ -28,7 +28,7 @@ const Bio = props => {
           css={css({
             mr: 2,
             mb: 0,
-            width: 80,
+            width: 100,
             minWidth: 48,
             borderRadius: `50%`,
             cursor: `pointer`,

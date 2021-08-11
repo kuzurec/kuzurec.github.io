@@ -10,8 +10,10 @@ export default function Bio(props) {
   return (
     <div>
       <div>
-        <span css={css({ color: props.isFooter ? "black": "white", fontSize: "24px" })}>kuzure-耳东山亘</span>
-        <Themed.a as={Link} to="https://github.com/kuzurec">
+        <span css={css({ color: props.isFooter ? "black": "white", fontSize: "24px" })}>耳东山亘</span>
+        <Themed.a as={Link} to="https://github.com/kuzurec" css={css({
+          fontSize: 24
+        })}>
           <svg className="icon github-icon" aria-hidden="true">
             <use xlinkHref="#icon-github"></use>
           </svg>

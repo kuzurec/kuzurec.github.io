@@ -37,7 +37,7 @@ const Header = props => {
     <div>
       <div
         css={css({
-          height: 402,
+          height: 600,
           overflow: `hidden`,
           position: `fixed !important`,
           top: 0,
@@ -112,7 +112,8 @@ const Header = props => {
             maxWidth: `container`,
             mx: `auto`,
             px: 3,
-            pt: 4,
+            pt: 100,
+            pb: 100,
           })}
         >
           <div
