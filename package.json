@@ -7,13 +7,13 @@
     "start": "npm run clean && mkdir public && node copyFile.js && gatsby develop",
     "build": "npm run clean && gatsby build",
     "clean": "gatsby clean",
-    "deploy": "npm run build --max_old_space_size=10240 && node copyFile.js && surge ./public kuzure.club && gh-pages -d public -b master",
+    "deploy": "npm run build --max_old_space_size=10240 && node copyFile.js && gh-pages -d public -b master",
     "deploy:surge": "surge ./public kuzure.club",
     "deploy:github": "gh-pages -d public -b master"
   },
   "license": "0BSD",
   "dependencies": {
-    "gatsby": "^3.6.2",
+    "gatsby": "^3.9.0",
     "gatsby-plugin-gitalk": "^1.2.2",
     "gatsby-plugin-load-script": "^1.1.0",
     "gatsby-plugin-manifest": "^3.8.0",
