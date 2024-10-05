@@ -124,7 +124,7 @@ const Header = props => {
               mb: 4,
             })}
           >
-            <Title {...props}>Kuzure's blog</Title>
+            <Title {...props}>Hill's blog</Title>
           </div>
           {<Bio {...props} />}
         </div>
